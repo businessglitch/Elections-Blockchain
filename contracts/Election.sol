@@ -15,11 +15,16 @@ contract Election {
 
 	// update candidate vote count
 	function vote(uint _id) public {
-		//record that voter has voted
-		account = msg.sender;
+		var account = msg.sender;
+		//require  that voter hasnt voted before
+		require(!voters[account]);
+		
+		//require that it is a valid candidate
+		require (_id > 0 && _id <= candidatesCount);
+		
+		
 		voters[account] = true;
 		candidates[_id].voteCount++;
-		
 	}
 	
 	// Fetch Candidate

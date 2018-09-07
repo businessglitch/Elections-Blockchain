@@ -58,6 +58,8 @@ App = {
     }).then(function(count) {
       var candidatesResults = $('#candidatesResults');
       candidatesResults.empty();
+      var candidateSelect = $('#candidatesSelect')
+      candidateSelect.empty();
 
       for (var i = 1; i <= count; i++) {
         electionInstance.candidates(i).then(function(candidate) {
@@ -68,13 +70,36 @@ App = {
           //Render candidate Results
           var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>";
           candidatesResults.append(candidateTemplate);
+          // Append Candidate Option to Select Box
+          candidateOption = '<option value="'+ id +'">' + name + '</option>'
+          candidateSelect.append(candidateOption);
         });
+      }
+      return electionInstance.voters(App.account);
+      
+    }).then(function(hasVoted){
+      // Hide the form if user has already voted
+      if(hasVoted) {
+        $('form').hide()
       }
       loader.hide();
       content.show();
     }).catch(function(error) {
       console.warn(error)
     });
+  },
+
+  castVote: function() {
+    var candidateId = $('#candidatesSelect').val();
+    App.contracts.Election.deployed().then(function(instance) {
+      return instance.vote(candidateId, {from:App.account})
+    }).then(function(result) {
+      // wait for votes to update
+      $('#loader').hide();
+      $('#content').show();
+    }).catch(function(err) {
+      console.error(err);
+    }); 
   },
 
   markAdopted: function(adopters, account) {
