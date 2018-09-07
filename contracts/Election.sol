@@ -13,13 +13,21 @@ contract Election {
 		candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
 	}
 
-	function incrementVote(uint _id) public {
+	// update candidate vote count
+	function vote(uint _id) public {
+		//record that voter has voted
+		account = msg.sender;
+		voters[account] = true;
 		candidates[_id].voteCount++;
+		
 	}
 	
 	// Fetch Candidate
 		//takes id and returns candidate
 	mapping(uint => Candidate) public candidates;
+
+	// Store accounts that have voted
+	mapping(address => bool) public voters;
 
 	// Store Candidate count
 	uint public candidatesCount;
