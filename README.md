@@ -1,6 +1,6 @@
 # Elections-Blockchain
 
-#To Run 
+## To Run 
   1. Make sure you have ganash installed and running
   2. Make sure you have the Meta Mask Chrome extension
   3. npm install
