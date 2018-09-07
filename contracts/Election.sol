@@ -7,6 +7,26 @@ contract Election {
 		string name;
 		uint voteCount;	
 	}
+
+	// Fetch Candidate
+		//takes id and returns candidate
+	mapping(uint => Candidate) public candidates;
+
+	// Store accounts that have voted
+	mapping(address => bool) public voters;
+
+	// Store Candidate count
+	uint public candidatesCount;
+
+	//voted Event
+	event votedEvent(uint _id);
+		
+
+	constructor() public {
+		addCandidate("Fahad Hayat");
+		addCandidate("Imran Khan");
+  	}
+
 	// Store a candidate
 	function addCandidate(string _name) private {
 		candidatesCount ++;
@@ -22,24 +42,9 @@ contract Election {
 		//require that it is a valid candidate
 		require (_id > 0 && _id <= candidatesCount);
 		
-		
 		voters[account] = true;
 		candidates[_id].voteCount++;
+		//trigger voted event
+		votedEvent(_id);
 	}
-	
-	// Fetch Candidate
-		//takes id and returns candidate
-	mapping(uint => Candidate) public candidates;
-
-	// Store accounts that have voted
-	mapping(address => bool) public voters;
-
-	// Store Candidate count
-	uint public candidatesCount;
-	
-	constructor() public {
-		addCandidate("Fahad Hayat");
-		addCandidate("Imran Khan");
-  	}
-
 }

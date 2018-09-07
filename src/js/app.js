@@ -26,6 +26,8 @@ App = {
       App.contracts.Election = TruffleContract(election);
       // connect a provider to interact with the contract
       App.contracts.Election.setProvider(App.web3Provider);
+      // Listen to events from the Server
+      App.listenForEvents();
 
       return App.render()
     });
@@ -33,6 +35,19 @@ App = {
 
   bindEvents: function() {
     $(document).on('click', '.btn-adopt', App.handleAdopt);
+  },
+
+  listenForEvents: function() {
+    App.contracts.Election.deployed().then(function(instance) {
+      instance.votedEvent({}, {
+        fromBlock: 0,
+        toBlock: 'latest'
+      }).watch(function(error, event) {
+        console.log("event triggered", event);
+
+        App.render()
+      });
+    });
   },
 
   render() {
@@ -103,16 +118,6 @@ App = {
   },
 
   markAdopted: function(adopters, account) {
-    /*
-     * Replace me...
-     */
-  },
-
-  handleAdopt: function(event) {
-    event.preventDefault();
-
-    var petId = parseInt($(event.target).data('id'));
-
     /*
      * Replace me...
      */
